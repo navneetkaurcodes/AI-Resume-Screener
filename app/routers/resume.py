@@ -9,7 +9,9 @@ from app.services.pdf_service import save_pdf
 from app.services.extraction_service import extract_text_from_pdf
 from app.services.parser_service import parse_resume
 from app.core.security import get_current_user
+from app.core.security import get_current_admin
 from app.models.models import User
+from sqlalchemy import or_
 
 router = APIRouter(prefix="/resumes",tags=["Resumes"])
 
@@ -29,10 +31,10 @@ def get_all_resumes(db: Session = Depends(get_db),current_user: User = Depends(g
 
     return db.query(Resume).filter(Resume.uploaded_by == current_user.id).all()
 
-@router.get("/get_resume/{resume_id}",response_model=ResumeResponse)
-def get_resume(resume_id: int,db: Session = Depends(get_db)):
+@router.get("/get_resume/{resume_id}", response_model=ResumeResponse)
+def get_resume(resume_id: int,db: Session = Depends(get_db),current_user: User = Depends(get_current_user)):
 
-    resume = (db.query(Resume).filter(Resume.id == resume_id).first())
+    resume = (db.query(Resume).filter(Resume.id == resume_id,Resume.uploaded_by == current_user.id).first())
 
     if not resume:
         raise HTTPException(status_code=404,detail="Resume not found")
@@ -40,9 +42,9 @@ def get_resume(resume_id: int,db: Session = Depends(get_db)):
     return resume
 
 @router.put("/update_resume/{resume_id}",response_model=ResumeResponse)
-def update_resume(resume_id: int,updated_resume: ResumeUpdate,db: Session = Depends(get_db)):
+def update_resume(resume_id: int,updated_resume: ResumeUpdate,db: Session = Depends(get_db),current_user: User = Depends(get_current_user)):
 
-    resume = (db.query(Resume).filter(Resume.id == resume_id).first())
+    resume = (db.query(Resume).filter(Resume.id == resume_id,Resume.uploaded_by == current_user.id).first())
 
     if not resume:
         raise HTTPException(status_code=404,detail="Resume not found")
@@ -58,7 +60,7 @@ def update_resume(resume_id: int,updated_resume: ResumeUpdate,db: Session = Depe
     return resume
 
 @router.delete("/delete_resume/{resume_id}")
-def delete_resume(resume_id: int,db: Session = Depends(get_db)):
+def delete_resume(resume_id: int,db: Session = Depends(get_db),admin: User = Depends(get_current_admin)):
 
     resume = (db.query(Resume).filter(Resume.id == resume_id).first())
 
@@ -91,3 +93,57 @@ def upload_resume(file: UploadFile = File(...),db: Session = Depends(get_db), cu
     db.refresh(resume)
 
     return {"message": "Resume uploaded successfully.","resume_id": resume.id,"filename": filename}
+
+@router.get("/search")
+def search_resumes(
+    candidate_name: str | None = None,
+    skill: str | None = None,
+    min_experience: float | None = None,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+
+    query = db.query(Resume).filter(
+        Resume.uploaded_by == current_user.id
+    )
+
+    if candidate_name:
+        query = query.filter(
+            Resume.candidate_name.ilike(f"%{candidate_name}%")
+        )
+
+    if min_experience:
+        query = query.filter(
+            Resume.experience_years >= min_experience
+        )
+
+    resumes = query.all()
+
+    if skill:
+        resumes = [
+            resume for resume in resumes
+            if resume.extracted_skills
+            and skill.lower() in [s.lower() for s in resume.extracted_skills]
+        ]
+
+    return resumes
+
+@router.get("/")
+def get_resumes(
+    page: int = 1,
+    limit: int = 10,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+
+    skip = (page - 1) * limit
+
+    resumes = (
+        db.query(Resume)
+        .filter(Resume.uploaded_by == current_user.id)
+        .offset(skip)
+        .limit(limit)
+        .all()
+    )
+
+    return resumes

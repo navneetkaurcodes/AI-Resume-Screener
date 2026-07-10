@@ -9,6 +9,7 @@ from app.schemas.schemas import (
     JobDescriptionResponse
 )
 from app.core.security import get_current_user
+from app.core.security import get_current_admin
 from app.models.models import User
 router = APIRouter(prefix="/job-descriptions",tags=["Job Descriptions"])
 
@@ -29,20 +30,21 @@ def get_all_job_descriptions(db: Session = Depends(get_db),current_user: User = 
 
     return jobs
 
-@router.get("display_job_description/{job_id}",response_model=JobDescriptionResponse)
-def get_job_description(job_id: int,db: Session = Depends(get_db)):
+@router.get("/display_job_description/{job_id}",response_model=JobDescriptionResponse)
+def get_job_description(job_id: int,db: Session = Depends(get_db),current_user: User = Depends(get_current_user)):
 
-    job = (db.query(JobDescription).filter(JobDescription.id == job_id).first())
+    job = (db.query(JobDescription).filter(JobDescription.id == job_id, JobDescription.user_id == current_user.id).first())
 
     if not job:
+        
         raise HTTPException(status_code=404,detail="Job Description not found")
 
     return job
 
-@router.put("update_job_description/{job_id}",response_model=JobDescriptionResponse)
-def update_job_description(job_id: int,updated_job: JobDescriptionUpdate,db: Session = Depends(get_db)):
+@router.put("/update_job_description/{job_id}",response_model=JobDescriptionResponse)
+def update_job_description(job_id: int,updated_job: JobDescriptionUpdate,db: Session = Depends(get_db),current_user: User = Depends(get_current_user)):
 
-    job = (db.query(JobDescription).filter(JobDescription.id == job_id).first())
+    job = (db.query(JobDescription).filter(JobDescription.id == job_id,JobDescription.user_id == current_user.id).first())
 
     if not job:
         raise HTTPException(status_code=404,detail="Job Description not found")
@@ -57,8 +59,8 @@ def update_job_description(job_id: int,updated_job: JobDescriptionUpdate,db: Ses
 
     return job
 
-@router.delete("delete_job_description/{job_id}")
-def delete_job_description(job_id: int,db: Session = Depends(get_db)):
+@router.delete("/delete_job_description/{job_id}")
+def delete_job_description(job_id: int,db: Session = Depends(get_db),admin: User = Depends(get_current_admin)):
 
     job = (db.query(JobDescription).filter(JobDescription.id == job_id).first())
 
@@ -69,4 +71,3 @@ def delete_job_description(job_id: int,db: Session = Depends(get_db)):
     db.commit()
 
     return {"message": "Job Description deleted successfully"}
-
