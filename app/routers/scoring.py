@@ -410,7 +410,7 @@ def admin_candidate_result(
     resume_id: int,
     job_id: int,
     db: Session = Depends(get_db),
-    current_admin: User = Depends(get_current_admin)
+    admin: User = Depends(get_current_admin)
 ):
  
     job = db.query(JobDescription).filter(JobDescription.id == job_id).first()
