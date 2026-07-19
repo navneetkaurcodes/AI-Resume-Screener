@@ -52,10 +52,14 @@ def get_current_user(token: str = Depends(oauth2_scheme),db: Session = Depends(g
         if user_id is None:
             raise credentials_exception
 
+        user_id = int(user_id)
+
     except JWTError:
         raise credentials_exception
+    except (ValueError, TypeError):
+        raise credentials_exception
 
-    user = db.query(User).filter(User.id == int(user_id)).first()
+    user = db.query(User).filter(User.id == user_id).first()
 
     if user is None:
         raise credentials_exception
@@ -63,7 +67,7 @@ def get_current_user(token: str = Depends(oauth2_scheme),db: Session = Depends(g
     return user
 
 def get_current_admin(current_user: User = Depends(get_current_user)):
-    if current_user.role != "Admin":
+    if current_user.role != "admin":
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN,detail="Only admins can access this resource.")
 
     return current_user

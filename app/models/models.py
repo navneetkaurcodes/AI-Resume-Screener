@@ -97,7 +97,7 @@ class CandidateScore(Base):
     jd_id             = Column(Integer, ForeignKey('job_descriptions.id', ondelete="CASCADE"),nullable=False)
     tfidf_score       = Column(Float)   # 0-100: how well resume TEXT matches JD text
     skill_match_percent= Column(Float)  # 0-100: % of required skills found in resume
-    final_score       = Column(Float)   # (0.7 × tfidf) + (0.3 × skill_match)
+    final_score       = Column(Float)   # (0.50 × tfidf) + (0.35 × skill_match) + (0.15 × experience_match)
     rank              = Column(Integer) # 1st, 2nd, 3rd... among all candidates for this JD
     scored_at         = Column(TIMESTAMP, default=datetime.utcnow)
 

@@ -158,3 +158,21 @@ class Token(BaseModel):
 
 class TokenData(BaseModel):
     email: Optional[str] = None
+
+
+# ==========================================================
+# CHATBOT SCHEMAS
+# ==========================================================
+
+class ChatMessage(BaseModel):
+    role: str   # "user" or "model"
+    text: str
+
+
+class ChatRequest(BaseModel):
+    message: str
+    history: Optional[List[ChatMessage]] = []
+
+
+class ChatResponse(BaseModel):
+    reply: str

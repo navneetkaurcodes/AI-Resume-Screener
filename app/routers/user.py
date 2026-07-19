@@ -26,7 +26,7 @@ def create_user(user: UserCreate,db: Session = Depends(get_db)):
 
     role = "hr_manager"
     if settings.admin_signup_code and secrets.compare_digest(user.admin_code or "", settings.admin_signup_code):
-        role = "Admin"
+        role = "admin"
     new_user = User(email=user.email,hashed_password=hash_password(user.password),full_name=user.full_name,role= role)
 
     db.add(new_user)

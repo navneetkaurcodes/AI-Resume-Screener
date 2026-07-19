@@ -113,7 +113,7 @@ def search_resumes(
             Resume.candidate_name.ilike(f"%{candidate_name}%")
         )
 
-    if min_experience:
+    if min_experience is not None:
         query = query.filter(
             Resume.experience_years >= min_experience
         )
