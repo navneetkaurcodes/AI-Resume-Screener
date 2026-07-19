@@ -13,6 +13,8 @@ class UserCreate(BaseModel):
     email: EmailStr
     password: str
     full_name: str
+    role: str
+    admin_code: Optional[str] = None
 
 
 class UserLogin(BaseModel):
@@ -28,6 +30,11 @@ class UserResponse(BaseModel):
     created_at: datetime
 
     model_config = ConfigDict(from_attributes=True)
+
+class UserUpdate(BaseModel):
+    email: Optional[EmailStr] = None
+    password: Optional[str] = None
+    full_name: Optional[str] = None
 
 
 # ==========================================================

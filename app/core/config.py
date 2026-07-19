@@ -6,6 +6,7 @@ class Settings(BaseSettings):
     algorithm: str = "HS256"
     access_token_expire_minutes: int = 60
     upload_dir: str = "./uploads"
+    admin_signup_code: str = ""
 
     class Config:
         env_file = ".env"

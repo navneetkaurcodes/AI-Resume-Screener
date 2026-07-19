@@ -20,9 +20,15 @@ def save_pdf(file: UploadFile):
 
     os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
-    filename = f"{uuid4()}_{file.filename}"
+    original_name = os.path.basename(file.filename or "resume.pdf")
+    safe_name = "".join(c for c in original_name if c.isalnum() or c in ("-", "_", "."))
+    safe_name = safe_name[-100:] or "resume.pdf"
+    if not safe_name.lower().endswith(".pdf"):
+        safe_name += ".pdf"
 
-    file_path = os.path.join(UPLOAD_FOLDER,filename)
+    filename = f"{uuid4()}_{safe_name}"
+
+    file_path = os.path.join(UPLOAD_FOLDER, filename)
 
     with open(file_path, "wb") as buffer:
         shutil.copyfileobj(file.file, buffer)

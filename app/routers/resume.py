@@ -85,6 +85,7 @@ def upload_resume(file: UploadFile = File(...),db: Session = Depends(get_db), cu
     resume = Resume(
     candidate_name=parsed_data["candidate_name"],email=parsed_data["email"],phone=parsed_data["phone"],
     extracted_skills=parsed_data["skills"],experience_years=parsed_data["experience_years"],
+    education=parsed_data["education"],job_titles=parsed_data["job_titles"],
     raw_text=raw_text,pdf_filename=filename,
     pdf_path=path,uploaded_by=current_user.id)
 

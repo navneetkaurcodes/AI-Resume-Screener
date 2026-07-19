@@ -1,7 +1,6 @@
 from sqlalchemy.orm import Session
 
 from app.models.models import CandidateScore
-from app.services.ranking_service import update_candidate_ranks
 
 
 

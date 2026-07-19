@@ -4,7 +4,7 @@ from sqlalchemy.orm import Session
 from app.core.database import get_db
 from app.core.security import get_current_user
 from app.core.security import get_current_admin
-
+from app.services.ranking_service import update_candidate_ranks
 from app.models.models import (
     User,
     Resume,
@@ -85,27 +85,54 @@ def score_resume(
         experience_score
     )
 
-    score = CandidateScore(
-        resume_id=resume.id,
-        jd_id=job.id,
-        tfidf_score=float(tfidf_score),
-        skill_match_percent=float(skill_percent),
-        final_score=float(final_score)
+    score = (
+        db.query(CandidateScore)
+        .filter(
+            CandidateScore.resume_id == resume.id,
+            CandidateScore.jd_id == job.id
+        )
+        .first()
     )
 
-    db.add(score)
+    if score:
+        score.tfidf_score = float(tfidf_score)
+        score.skill_match_percent = float(skill_percent)
+        score.final_score = float(final_score)
+    else:
+        score = CandidateScore(
+            resume_id=resume.id,
+            jd_id=job.id,
+            tfidf_score=float(tfidf_score),
+            skill_match_percent=float(skill_percent),
+            final_score=float(final_score)
+        )
+        db.add(score)
 
-    gap = SkillGap(
-        resume_id=resume.id,
-        jd_id=job.id,
-        matched_skills=matched,
-        missing_skills=missing,
-        match_percent=skill_percent
+    gap = (
+        db.query(SkillGap)
+        .filter(
+            SkillGap.resume_id == resume.id,
+            SkillGap.jd_id == job.id
+        )
+        .first()
     )
 
-    db.add(gap)
+    if gap:
+        gap.matched_skills = matched
+        gap.missing_skills = missing
+        gap.match_percent = skill_percent
+    else:
+        gap = SkillGap(
+            resume_id=resume.id,
+            jd_id=job.id,
+            matched_skills=matched,
+            missing_skills=missing,
+            match_percent=skill_percent
+        )
+        db.add(gap)
 
     db.commit()
+    update_candidate_ranks(job.id, db)
 
     return {
         "resume_id": resume.id,
@@ -271,27 +298,54 @@ def admin_score_resume(
         experience_score
     )
  
-    score = CandidateScore(
-        resume_id=resume.id,
-        jd_id=job.id,
-        tfidf_score=float(tfidf_score),
-        skill_match_percent=float(skill_percent),
-        final_score=float(final_score)
+    score = (
+        db.query(CandidateScore)
+        .filter(
+            CandidateScore.resume_id == resume.id,
+            CandidateScore.jd_id == job.id
+        )
+        .first()
     )
- 
-    db.add(score)
- 
-    gap = SkillGap(
-        resume_id=resume.id,
-        jd_id=job.id,
-        matched_skills=matched,
-        missing_skills=missing,
-        match_percent=skill_percent
+
+    if score:
+        score.tfidf_score = float(tfidf_score)
+        score.skill_match_percent = float(skill_percent)
+        score.final_score = float(final_score)
+    else:
+        score = CandidateScore(
+            resume_id=resume.id,
+            jd_id=job.id,
+            tfidf_score=float(tfidf_score),
+            skill_match_percent=float(skill_percent),
+            final_score=float(final_score)
+        )
+        db.add(score)
+
+    gap = (
+        db.query(SkillGap)
+        .filter(
+            SkillGap.resume_id == resume.id,
+            SkillGap.jd_id == job.id
+        )
+        .first()
     )
- 
-    db.add(gap)
- 
+
+    if gap:
+        gap.matched_skills = matched
+        gap.missing_skills = missing
+        gap.match_percent = skill_percent
+    else:
+        gap = SkillGap(
+            resume_id=resume.id,
+            jd_id=job.id,
+            matched_skills=matched,
+            missing_skills=missing,
+            match_percent=skill_percent
+        )
+        db.add(gap)
+
     db.commit()
+    update_candidate_ranks(job.id, db)
  
     return {
         "resume_id": resume.id,

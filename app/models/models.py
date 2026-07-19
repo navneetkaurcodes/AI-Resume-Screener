@@ -1,7 +1,5 @@
 # models.py
 
-# this file helps to build connection between python and database 
-
 from sqlalchemy import (
     Column, Integer, String, Float, 
     Text, ARRAY, TIMESTAMP, ForeignKey, JSON, UniqueConstraint
@@ -10,10 +8,9 @@ from sqlalchemy.orm import relationship
 from datetime import datetime
 from app.core.database import Base
 
-# ─────────────────────────────────────────
+
 # TABLE 1: users
 # Stores everyone who logs into the system (HR managers)
-# ─────────────────────────────────────────
 class User(Base):
     __tablename__ = 'users'   # tbale name in PostgreSQL
 
@@ -30,11 +27,10 @@ class User(Base):
     job_descriptions = relationship("JobDescription",back_populates="creator",cascade="all, delete-orphan")
 
 
-# ─────────────────────────────────────────
 # TABLE 2: job_descriptions
 # Stores every job posting the HR manager creates
 # e.g. "Senior Python Developer at Infosys, needs Docker, FastAPI..."
-# ─────────────────────────────────────────
+
 class JobDescription(Base):
     __tablename__ = 'job_descriptions'
 
@@ -55,11 +51,10 @@ class JobDescription(Base):
     skill_gaps = relationship("SkillGap",back_populates="job_description",cascade="all, delete-orphan")
 
 
-# ─────────────────────────────────────────
 # TABLE 3: resumes
 # Stores every uploaded PDF resume
 # After PDF is uploaded, we extract name/email/skills from it and save here
-# ─────────────────────────────────────────
+
 class Resume(Base):
     __tablename__ = 'resumes'
 

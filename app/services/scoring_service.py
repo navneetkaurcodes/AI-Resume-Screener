@@ -17,9 +17,16 @@ def calculate_tfidf_score(job_text: str, resume_text: str) -> float:
 
     documents = [job_text, resume_text]
 
-    vectorizer = TfidfVectorizer(stop_words="english")
+    vectorizer = TfidfVectorizer(
+        stop_words="english",
+        ngram_range=(1, 2),
+        max_features=5000
+    )
 
-    tfidf_matrix = vectorizer.fit_transform(documents)
+    try:
+        tfidf_matrix = vectorizer.fit_transform(documents)
+    except ValueError:
+        return 0.0
 
     similarity = cosine_similarity(
         tfidf_matrix[0:1],
@@ -37,9 +44,23 @@ def calculate_skill_match(required_skills, candidate_skills):
 
     if not required_skills:
         return 0, [], []
+    
+    candidate_skills = candidate_skills or []
 
-    required = {skill.lower() for skill in required_skills}
-    candidate = {skill.lower() for skill in candidate_skills}
+    required = {
+        skill.strip().lower()
+        for skill in required_skills
+        if skill and skill.strip()
+    }
+
+    candidate = {
+        skill.strip().lower()
+        for skill in candidate_skills
+        if skill and skill.strip()
+    }
+
+    if not required:
+        return 0, [], []
 
     matched = required.intersection(candidate)
 
@@ -50,7 +71,7 @@ def calculate_skill_match(required_skills, candidate_skills):
         2
     )
 
-    return percentage, list(matched), list(missing)
+    return (percentage,sorted(matched),sorted(missing))
 
 
 # -------------------------------------------------------
@@ -63,6 +84,12 @@ def calculate_experience_match(
 ):
 
     if required_experience is None:
+        return 100
+    
+    if candidate_experience is None:
+        candidate_experience = 0
+
+    if required_experience <= 0:
         return 100
 
     if candidate_experience >= required_experience:
@@ -91,13 +118,14 @@ def calculate_final_score(
     Skills       -> 35%
     Experience   -> 15%
     """
+    TFIDF_WEIGHT = 0.50
+    SKILL_WEIGHT = 0.35
+    EXPERIENCE_WEIGHT = 0.15
 
     final = (
-        tfidf_score * 0.50
-        +
-        skill_score * 0.35
-        +
-        experience_score * 0.15
-    )
+    tfidf_score * TFIDF_WEIGHT
+    + skill_score * SKILL_WEIGHT
+    + experience_score * EXPERIENCE_WEIGHT
+)
 
     return round(final, 2)
