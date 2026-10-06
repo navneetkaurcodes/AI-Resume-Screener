@@ -1,5 +1,9 @@
+#config.py
+
+# import BaseSettings from pydantic_settings to read environment variables from .env file
 from pydantic_settings import BaseSettings
 
+# create a Settings class that inherits from BaseSettings to read environment variables from .env file
 class Settings(BaseSettings):
     database_url: str
     secret_key: str
@@ -10,6 +14,7 @@ class Settings(BaseSettings):
     gemini_api_key: str = ""
     cors_origins: str = "http://localhost:5500"
 
+    # create a Config class to specify the .env file location
     class Config:
         env_file = ".env"
 

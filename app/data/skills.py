@@ -1,3 +1,6 @@
+#skills.py: used to store the skills that can be used to filter resumes
+#regex: used to validate the skills
+
 SKILLS = [
     "Python",
     "FastAPI",

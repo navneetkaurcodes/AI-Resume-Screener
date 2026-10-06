@@ -3,10 +3,7 @@ import re
 from app.data.skills import SKILLS
 
 
-# -------------------------------
 # Extract Email
-# -------------------------------
-
 def extract_email(text: str):
 
     pattern = r"[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}"
@@ -16,10 +13,8 @@ def extract_email(text: str):
     return match.group(0) if match else None
 
 
-# -------------------------------
-# Extract Phone Number
-# -------------------------------
 
+# Extract Phone Number
 def extract_phone(text: str):
 
     pattern = r"(?:\+?91[-\s]?)?[6-9]\d{4}[-\s]?\d{5}"
@@ -39,10 +34,8 @@ def extract_phone(text: str):
     return f"+91-{digits[:5]} {digits[5:]}"
 
 
-# -------------------------------
-# Extract Skills
-# -------------------------------
 
+# Extract Skills
 def extract_skills(text: str):
 
     text_lower = text.lower()
@@ -136,10 +129,7 @@ def _get_section_block(text: str, headings: set):
     return []
 
 
-# -------------------------------
 # Extract Education
-# -------------------------------
-
 DEGREE_PATTERNS = [
     r"ph\.?d", r"m\.?tech", r"m\.?e\.?", r"mba", r"m\.?c\.?a\.?",
     r"m\.?sc", r"m\.?a\.?", r"master(?:'s)? of [a-z ]+",
@@ -191,10 +181,8 @@ def extract_education(text: str):
     }
 
 
-# -------------------------------
-# Extract Job Titles
-# -------------------------------
 
+# Extract Job Titles
 JOB_TITLE_KEYWORDS = [
     "developer", "engineer", "manager", "analyst", "executive", "intern",
     "consultant", "designer", "coordinator", "specialist", "scientist",

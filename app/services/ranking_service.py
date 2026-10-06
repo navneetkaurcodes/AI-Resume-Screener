@@ -3,7 +3,6 @@ from sqlalchemy.orm import Session
 from app.models.models import CandidateScore
 
 
-
 def update_candidate_ranks(job_id: int, db: Session):
     """
     Assign ranks to all candidates for a job

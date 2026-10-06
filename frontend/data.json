@@ -1,0 +1,50 @@
+{
+  "users": [
+    {
+      "id": 1,
+      "email": "admin@resumeray.io",
+      "full_name": "System Admin",
+      "hashed_password": "$2a$08$RlMiER9QjWeMKiAvMsjxkePHvwLcCb2BMEQXBDK7TyzLnTk6XME3e",
+      "role": "Admin",
+      "created_at": "2026-07-10T19:52:57.830Z"
+    },
+    {
+      "id": 2,
+      "email": "hr@test.com",
+      "full_name": "Test HR",
+      "hashed_password": "$2a$08$AeiKAr1xA9W6/39EdV6QtODjCHmbxjqeokgjHC75.3SEqICmzpjB2",
+      "role": "hr_manager",
+      "created_at": "2026-07-10T19:53:09.150Z"
+    }
+  ],
+  "jobs": [
+    {
+      "id": 1,
+      "user_id": 2,
+      "title": "Senior Backend Engineer",
+      "company": "Acme",
+      "description": "Build APIs in Python and FastAPI",
+      "required_skills": [
+        "Python",
+        "FastAPI",
+        "PostgreSQL"
+      ],
+      "preferred_skills": [
+        "Docker",
+        "AWS"
+      ],
+      "min_experience": 3,
+      "created_at": "2026-07-10T19:53:09.209Z"
+    }
+  ],
+  "resumes": [],
+  "scores": [],
+  "skill_gaps": [],
+  "seq": {
+    "user": 3,
+    "job": 2,
+    "resume": 1,
+    "score": 1,
+    "gap": 1
+  }
+}

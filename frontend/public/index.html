@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>CVRankHireAI — AI Resume Screener</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="/css/style.css" />
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="0" />
+  </head>
+  <body>
+    <div class="bg-orbs" aria-hidden="true">
+      <span class="orb orb-1"></span>
+      <span class="orb orb-2"></span>
+      <span class="orb orb-3"></span>
+      <span class="orb orb-4"></span>
+    </div>
+    <div id="toast-host" class="toast-host"></div>
+    <div id="app"></div>
+
+    <script>
+      // Where your FastAPI backend is running. Change this if uvicorn
+      // isn't on the default host/port (see app/core/config.py -> CORS_ORIGINS
+      // must include whatever origin THIS page is served from, e.g. http://localhost:5500).
+      window.API_BASE_URL = "http://127.0.0.1:8000";
+    </script>
+    <script type="module" src="/js/main.js"></script>
+  </body>
+</html>

@@ -4,11 +4,7 @@ from pydantic import BaseModel, EmailStr, ConfigDict
 from typing import List, Optional, Dict
 from datetime import datetime
 
-
-# ==========================================================
 # USER SCHEMAS
-# ==========================================================
-
 class UserCreate(BaseModel):
     email: EmailStr
     password: str
@@ -37,10 +33,7 @@ class UserUpdate(BaseModel):
     full_name: Optional[str] = None
 
 
-# ==========================================================
 # JOB DESCRIPTION SCHEMAS
-# ==========================================================
-
 class JobDescriptionCreate(BaseModel):
     title: str
     company: Optional[str] = None
@@ -73,10 +66,7 @@ class JobDescriptionResponse(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
 
-# ==========================================================
 # RESUME SCHEMAS
-# ==========================================================
-
 class ResumeCreate(BaseModel):
     candidate_name: Optional[str] = None
     email: Optional[EmailStr] = None
@@ -115,10 +105,7 @@ class ResumeResponse(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
 
-# ==========================================================
 # CANDIDATE SCORE SCHEMAS
-# ==========================================================
-
 class CandidateScoreResponse(BaseModel):
     id: int
     resume_id: int
@@ -132,10 +119,7 @@ class CandidateScoreResponse(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
 
-# ==========================================================
 # SKILL GAP SCHEMAS
-# ==========================================================
-
 class SkillGapResponse(BaseModel):
     id: int
     resume_id: int
@@ -147,10 +131,8 @@ class SkillGapResponse(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
 
-# ==========================================================
-# AUTH SCHEMAS
-# ==========================================================
 
+# AUTH SCHEMAS
 class Token(BaseModel):
     access_token: str
     token_type: str = "bearer"
@@ -160,10 +142,7 @@ class TokenData(BaseModel):
     email: Optional[str] = None
 
 
-# ==========================================================
 # CHATBOT SCHEMAS
-# ==========================================================
-
 class ChatMessage(BaseModel):
     role: str   # "user" or "model"
     text: str

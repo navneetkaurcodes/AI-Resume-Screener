@@ -2,10 +2,7 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 
 
-# -------------------------------------------------------
 # 1. TF-IDF Similarity
-# -------------------------------------------------------
-
 def calculate_tfidf_score(job_text: str, resume_text: str) -> float:
     """
     Compare job description with resume using TF-IDF.
@@ -36,10 +33,7 @@ def calculate_tfidf_score(job_text: str, resume_text: str) -> float:
     return round(similarity * 100, 2)
 
 
-# -------------------------------------------------------
 # 2. Required Skill Match
-# -------------------------------------------------------
-
 def calculate_skill_match(required_skills, candidate_skills):
 
     if not required_skills:
@@ -74,10 +68,8 @@ def calculate_skill_match(required_skills, candidate_skills):
     return (percentage,sorted(matched),sorted(missing))
 
 
-# -------------------------------------------------------
-# 3. Experience Match
-# -------------------------------------------------------
 
+# 3. Experience Match
 def calculate_experience_match(
     required_experience,
     candidate_experience
@@ -102,10 +94,8 @@ def calculate_experience_match(
     return round(score, 2)
 
 
-# -------------------------------------------------------
-# 4. Final Score
-# -------------------------------------------------------
 
+# 4. Final Score
 def calculate_final_score(
     tfidf_score,
     skill_score,

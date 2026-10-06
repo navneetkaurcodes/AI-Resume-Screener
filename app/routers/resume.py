@@ -129,7 +129,7 @@ def search_resumes(
 
     return resumes
 
-@router.get("/")
+@router.get("/pagination")
 def get_resumes(
     page: int = 1,
     limit: int = 10,
